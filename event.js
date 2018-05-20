@@ -29,6 +29,7 @@ function afterDOMLoaded(){
 					try { var r=JSON.parse(x.responseText); } catch(e){}
 					console.log('r=',r);
 					if(!r) return;
+					updateETA(r);
 					updateBadge(r);
 				} else if(this.readyState==4){
 					var m='Error getting data. API seems down.<br>This should be temporary.';

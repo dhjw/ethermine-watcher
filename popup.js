@@ -4,7 +4,7 @@ function dataDisplay(r){ // { unpaid,hashrate,minpayout }
 	var hashrate=BigNumber(r.data.currentStatistics.reportedHashrate).div('1000000').toFixed(1)+' MH/s';
 	var unpaid=BigNumber(r.data.currentStatistics.unpaid.toString()).div('1000000000000000000').toFixed(8);
 	var minpayout=BigNumber(r.data.settings.minPayout.toString()).div('1000000000000000000');
-	document.getElementById('data_wrap').innerHTML='Hashrate: '+hashrate+'<br>Balance: '+unpaid+'<br>minPayout: '+minpayout+'<br><a target="_blank" href="https://ethermine.org/miners/'+addr+'">View on Ethermine</a>';
+	document.getElementById('data_wrap').innerHTML='Hashrate: '+hashrate+'<br>Balance: '+unpaid+' / '+minpayout+'<br>ETA: '+getETA(r)+'<br><a target="_blank" href="https://ethermine.org/miners/'+addr+'">View on Ethermine</a>';
 	updateBadge(r);
 }
 		
@@ -13,8 +13,9 @@ function updateData(){
 	lu=localStorage.getItem('lastupdate');
 	if(!lu) lu=0;
 	var now=Date.now()/1000|0;
-	if(now-lu<30){
+	if(now-lu<15){
 		console.log('loading cached data');
+		updateETA(JSON.parse(localStorage.getItem('lastresponse'))); // todo: remove?
 		dataDisplay(JSON.parse(localStorage.getItem('lastresponse')));
 		return;
 	}
@@ -28,6 +29,7 @@ function updateData(){
 			if(!r) return;
 			localStorage.setItem('lastupdate',now);
 			localStorage.setItem('lastresponse',x.responseText);
+			updateETA(r);
 			dataDisplay(r)
 		} else if(this.readyState==4){
 			var m='Error getting data. API seems down.<br>This should be temporary.';
