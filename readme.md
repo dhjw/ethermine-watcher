@@ -1,5 +1,5 @@
 ## Ethermine Balance Watcher Chrome Extension
-Grabs Ethermine unpaid balance via the API and displays it on the extension icon and popup
+Grabs Ethermine unpaid balance via the API and displays it on the toolbar icon and popup
 
 ### Install
 - Download folder, e.g. with git clone
