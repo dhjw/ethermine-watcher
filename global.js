@@ -1,4 +1,4 @@
-var debug=1;
+var debug='';
 
 // multi sync ajax https://stackoverflow.com/a/34570288
 function requestsAreComplete(requests) {
@@ -41,12 +41,12 @@ function getETA(r){
 	var togo=BigNumber(r.data.minPayout.toString()).minus(BigNumber(r.data.unpaid.toString())).div('1000000000000000000');
 	var cpm=BigNumber(r.data.coinsPerMin.toString());
 	var stogo=BigNumber(togo).div(BigNumber(cpm)).times('60').toFixed(0);
-	var eta=togostring(stogo);
+	var eta=togoString(stogo);
 	if(debug) console.log('getETA() togo='+togo+' cpm='+cpm+' stogo='+stogo+' eta='+eta);
 	return eta;
 }
 
-function togostring(x){
+function togoString(x){
 	if(x<=0) return 'Now';
 	var s=parseInt(x);
 	var d=Math.floor(s/86400); s-=d*86400;
