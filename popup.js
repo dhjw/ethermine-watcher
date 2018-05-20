@@ -25,9 +25,8 @@ function updateData(){
 	var xs=[x0,x1];
 	onRequestsComplete(xs, function(xr, xerr){
 		for(let i=0;i<xs.length;i++) if(xs[i].status!==200){
-			var m='Error getting data. API seems down.<br>This should be temporary.';
-			document.getElementById('data_wrap').innerHTML='<div id="error">'+m+'</div>';
-			if(debug){ console.log('error '+m+' x='); console.log(x); }
+			document.getElementById('data_wrap').innerHTML='<div id="error">Error getting data. API seems down.<br>This should be temporary.</div>';
+			if(debug) console.log('api error xs=',xs);
 			return;
 		}
 		try { var r0=JSON.parse(x0.responseText); } catch(e){}
