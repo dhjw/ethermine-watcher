@@ -1,5 +1,3 @@
-/* BCH Tips popup.js */
-
 var addr='';
 
 function dataDisplay(r){ // { unpaid,hashrate,minpayout }
