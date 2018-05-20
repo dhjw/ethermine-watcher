@@ -1,0 +1,1 @@
+Ethermine Watcher Chrome Extension
