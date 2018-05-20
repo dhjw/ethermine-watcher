@@ -50,35 +50,33 @@ function afterDOMLoaded(){
 			chrome.alarms.create('update',{periodInMinutes:3});
 			if(debug) setTimeout(function(){ chrome.alarms.getAll(function(a){ console.log('alarms='); console.log(a); }); },1000);
 		}
-		updateBadge();
+		update();
 	});
 
 	chrome.alarms.onAlarm.addListener(function(a){
 		if(debug) console.log('alarm '+a.name+' fired.');
-		if(a.name=='update'||a.name=='update_test') updateBadge();
+		if(a.name=='update') update();
 	});
 	
-	function updateBadge(){
+	function update(){
+		if(debug) console.log('update()');
 		chrome.storage.sync.get(['data'],function(obj){
 			if(!obj.data.addr){ console.log('no address set, skipping run'); return; }
-			var x0=new XMLHttpRequest(); x0.timeout=15000; x0.open("GET","https://api.ethermine.org/miner/"+obj.data.addr+"/dashboard",true);
-			var xs=[x0];
-			onRequestsComplete(xs, function(xr, xerr){
-				try { var resp=JSON.parse(x0.responseText); } catch(e){}
-				console.log('resp=',resp);
-				if(xs[0].status!==200 || xs[0].responseText=='' || !resp){
+			var x=new XMLHttpRequest();
+			x.timeout=15000;
+			x.open("GET","https://api.ethermine.org/miner/"+obj.data.addr+"/dashboard",true);
+			x.onreadystatechange=function(){
+				if(this.readyState==4 && this.status==200){
+					try { var r=JSON.parse(x.responseText); } catch(e){}
+					console.log('r=',r);
+					if(!r) return;
+					updateBadge(r);
+				} else if(this.readyState==4){
 					var m='Error getting data. API seems down.<br>This should be temporary.';
-					document.getElementById('body_wrap').innerHTML='<span id="error">'+m+'</span>';
 					if(debug){ console.log('error '+m+' xs='); console.log(xs); }
-					return;
 				}
-				var unpaid=BigNumber(resp.data.currentStatistics.unpaid.toString()).div('1000000000000000000').toFixed(8);
-				if(debug) console.log('updating badge to '+unpaid);
-				chrome.browserAction.setBadgeText({text: unpaid.replace(/^0+/,'').substr(0,5)});
-				chrome.browserAction.setBadgeBackgroundColor({color: badgeBgColor});
-
-			});
-			x0.send();
+			}
+			x.send();
 		});
 	}
 }

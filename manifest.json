@@ -1,6 +1,6 @@
 {
 	"name": "Ethermine Watcher",
-	"description": "Ethermine unpaid balance and worker watcher",
+	"description": "Ethermine Balance Watcher",
 	"manifest_version": 2,
 	"version": "1.0.0",
 	"icons": {
