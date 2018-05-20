@@ -1,6 +1,6 @@
 {
 	"name": "Ethermine Watcher",
-	"description": "Ethermine Balance Watcher",
+	"description": "Watch your Ethermine balance",
 	"manifest_version": 2,
 	"version": "1.0.0",
 	"icons": {
