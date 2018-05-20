@@ -21,22 +21,27 @@ function afterDOMLoaded(){
 		if(debug) console.log('update()');
 		chrome.storage.sync.get(['data'],function(obj){
 			if(!obj.data.addr){ console.log('no address set, skipping run'); return; }
-			var x=new XMLHttpRequest();
-			x.timeout=15000;
-			x.open("GET","https://api.ethermine.org/miner/"+obj.data.addr+"/dashboard",true);
-			x.onreadystatechange=function(){
-				if(this.readyState==4 && this.status==200){
-					try { var r=JSON.parse(x.responseText); } catch(e){}
-					console.log('r=',r);
-					if(!r) return;
-					updateETA(r);
-					updateBadge(r);
-				} else if(this.readyState==4){
+			var x0=new XMLHttpRequest(); x0.timeout=15000; x0.open("GET","https://api.ethermine.org/miner/"+obj.data.addr+"/currentStats",true);
+			var x1=new XMLHttpRequest(); x1.timeout=15000; x1.open("GET","https://api.ethermine.org/miner/"+obj.data.addr+"/settings",true);
+			var xs=[x0,x1];
+			onRequestsComplete(xs, function(xr, xerr){
+				for(let i=0;i<xs.length;i++) if(xs[i].status!==200){
 					var m='Error getting data. API seems down.<br>This should be temporary.';
-					if(debug){ console.log('error '+m+' xs='); console.log(xs); }
+					document.getElementById('data_wrap').innerHTML='<div id="error">'+m+'</div>';
+					if(debug){ console.log('error '+m+' x='); console.log(x); }
+					return;
 				}
-			}
-			x.send();
+				try { var r0=JSON.parse(x0.responseText); } catch(e){}
+				try { var r1=JSON.parse(x1.responseText); } catch(e){}
+				if(debug){ console.log('r0=',r0); console.log('r1=',r1); }
+				if(!r0 || !r1) return;
+				r={data:{}}
+				for(var a in r0.data) r.data[a]=r0.data[a];
+				for(var a in r1.data) r.data[a]=r1.data[a];
+				if(debug) console.log('r=',r);
+				updateBadge(r);
+			});
+			x0.send(); x1.send();
 		});
 	}
 }
