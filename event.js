@@ -74,7 +74,7 @@ function afterDOMLoaded(){
 				}
 				var unpaid=BigNumber(resp.data.currentStatistics.unpaid.toString()).div('1000000000000000000').toFixed(8);
 				if(debug) console.log('updating badge to '+unpaid);
-				chrome.browserAction.setBadgeText({text: unpaid.replace(/^0+/,'')/*.substr(0,4)*/});
+				chrome.browserAction.setBadgeText({text: unpaid.replace(/^0+/,'').substr(0,5)});
 				chrome.browserAction.setBadgeBackgroundColor({color: badgeBgColor});
 
 			});

@@ -7,7 +7,7 @@ function dataDisplay(data){ // { unpaid,hashrate,minpayout }\
 	var unpaid=BigNumber(data.unpaid.toString()).div('1000000000000000000').toFixed(8);
 	var minpayout=BigNumber(data.minpayout.toString()).div('1000000000000000000');
 	document.getElementById('data_wrap').innerHTML='Hashrate: '+hashrate+'<br>Unpaid: '+unpaid+'<br>minPayout: '+minpayout;
-	chrome.browserAction.setBadgeText({text: unpaid.replace(/^0+/,'')});
+	chrome.browserAction.setBadgeText({text: unpaid.replace(/^0+/,'').substr(0,5)});
 	chrome.browserAction.setBadgeBackgroundColor({color: badgeBgColor});
 }
 		
