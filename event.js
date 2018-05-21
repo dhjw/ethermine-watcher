@@ -37,6 +37,7 @@ function afterDOMLoaded(){
 				r={data:{}}
 				for(var a in r0.data) r.data[a]=r0.data[a];
 				for(var a in r1.data) r.data[a]=r1.data[a];
+				if(!r.data.unpaid) r.data.unpaid=0;
 				if(debug) console.log('r=',r);
 				updateBadge(r);
 			});

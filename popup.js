@@ -6,7 +6,7 @@ function dataDisplay(r){
 	var minpayout=BigNumber(r.data.minPayout.toString()).div('1000000000000000000');
 	var eta=getETA(r);
 	r.eta=eta; // so badge doesn't have to recalculate
-	document.getElementById('data_wrap').innerHTML='Hashrate: '+hashrate+'<br>Balance: '+unpaid+' / '+minpayout+'<br>ETA: '+eta+'<br><a target="_blank" href="https://ethermine.org/miners/'+addr+'">View on Ethermine</a>';
+	document.getElementById('data_wrap').innerHTML='Hashrate: '+hashrate+'<br>Balance: '+unpaid+' / '+minpayout+'<br>ETA: '+eta+'<br><a target="_blank" href="https://ethermine.org/miners/'+addr+'">Dashboard</a> | <a target="_blank" href="https://ethermine.org/miners/'+addr+'/payouts">Payouts</a> | <a target="_blank" href="https://ethermine.org/miners/'+addr+'/settings">Settings</a>';
 	updateBadge(r);
 }
 		
@@ -36,6 +36,7 @@ function updateData(){
 		r={data:{}}
 		for(var a in r0.data) r.data[a]=r0.data[a];
 		for(var a in r1.data) r.data[a]=r1.data[a];
+		if(!r.data.unpaid) r.data.unpaid=0;
 		if(debug) console.log('r=',r);
 		localStorage.setItem('lastupdate',now);
 		localStorage.setItem('lastresponse',JSON.stringify(r));
