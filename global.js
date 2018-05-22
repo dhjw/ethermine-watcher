@@ -1,5 +1,4 @@
 var debug=1;
-var alt_currency='CAD'; // set to empty string, null or false for USD. see http://www.mycurrency.net/service/rates for list.
 
 // multi sync ajax https://stackoverflow.com/a/34570288
 function requestsAreComplete(requests) {
