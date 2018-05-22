@@ -4,9 +4,11 @@ function dataDisplay(r){
 	var hashrate=BigNumber(r.data.reportedHashrate).div('1000000').toFixed(1)+' MH/s';
 	var unpaid=BigNumber(r.data.unpaid.toString()).div('1000000000000000000').toFixed(8);
 	var minpayout=BigNumber(r.data.minPayout.toString()).div('1000000000000000000');
+	var usdpd=BigNumber(r.data.usdPerMin.toString()).times(1440).toFixed(2);
+	if(alt_currency) var altpd=BigNumber(usdpd).times(BigNumber(r.data.usdalt)).toFixed(2);
 	var eta=getETA(r);
 	r.eta=eta; // so badge doesn't have to recalculate
-	document.getElementById('data_wrap').innerHTML='Hashrate: '+hashrate+'<br>Balance: '+unpaid+' / '+minpayout+'<br>ETA: '+eta+'<br><a target="_blank" href="https://ethermine.org/miners/'+addr+'">Dashboard</a> | <a target="_blank" href="https://ethermine.org/miners/'+addr+'/payouts">Payouts</a> | <a target="_blank" href="https://ethermine.org/miners/'+addr+'/settings">Settings</a>';
+	document.getElementById('data_wrap').innerHTML='Hashrate: '+hashrate+'<br>Balance: '+unpaid+' / '+minpayout+'<br>ETA: '+eta+'<br>'+(!alt_currency ? 'USD/day: $'+usdpd+'<br>':'')+(alt_currency ? alt_currency+'/day: $'+altpd+'<br>':'')+'<a target="_blank" href="https://ethermine.org/miners/'+addr+'">Dashboard</a> | <a target="_blank" href="https://ethermine.org/miners/'+addr+'/payouts">Payouts</a> | <a target="_blank" href="https://ethermine.org/miners/'+addr+'/settings?ip='+r.data.ip+'">Settings</a>';
 	updateBadge(r);
 }
 		
@@ -22,27 +24,35 @@ function updateData(){
 	}
 	var x0=new XMLHttpRequest(); x0.timeout=15000; x0.open("GET","https://api.ethermine.org/miner/"+addr+"/currentStats",true);
 	var x1=new XMLHttpRequest(); x1.timeout=15000; x1.open("GET","https://api.ethermine.org/miner/"+addr+"/settings",true);
-	var xs=[x0,x1];
+	var x2=new XMLHttpRequest(); x2.timeout=15000; x2.open("GET","https://ipinfo.io/json",true); // get ip to append to settings url
+	if(alt_currency){
+		var x3=new XMLHttpRequest(); x3.timeout=15000; x3.open("GET","http://www.mycurrency.net/service/rates",true); // get ip to append to settings url
+		var xs=[x0,x1,x2,x3];
+	} else var xs=[x0,x1,x2];
 	onRequestsComplete(xs, function(xr, xerr){
 		for(let i=0;i<xs.length;i++) if(xs[i].status!==200){
 			document.getElementById('data_wrap').innerHTML='<div id="error">Error getting data. API seems down.<br>This should be temporary.</div>';
-			if(debug) console.log('api error xs=',xs);
+			console.log('api error xs=',xs);
 			return;
 		}
 		try { var r0=JSON.parse(x0.responseText); } catch(e){}
 		try { var r1=JSON.parse(x1.responseText); } catch(e){}
-		if(debug){ console.log('r0=',r0); console.log('r1=',r1); }
-		if(!r0 || !r1) return;
+		try { var r2=JSON.parse(x2.responseText); } catch(e){}
+		if(alt_currency) try { var r3=JSON.parse(x3.responseText); } catch(e){}
+		if(debug){ console.log('r0=',r0); console.log('r1=',r1); console.log('r2=',r2); if(alt_currency) console.log('r3=',r3); }
+		if(!r0 || !r1 || !r2 || (alt_currency && !r3)) return;
 		r={data:{}}
 		for(var a in r0.data) r.data[a]=r0.data[a];
 		for(var a in r1.data) r.data[a]=r1.data[a];
+		r.data.ip=r2.ip;
+		if(alt_currency) for(let i=0;i<r3.length;i++) if(r3[i].currency_code==alt_currency){ r.data.usdalt=r3[i].rate; break; }
 		if(!r.data.unpaid) r.data.unpaid=0;
 		if(debug) console.log('r=',r);
 		localStorage.setItem('lastupdate',now);
 		localStorage.setItem('lastresponse',JSON.stringify(r));
 		dataDisplay(r);
 	});
-	x0.send(); x1.send();
+	x0.send(); x1.send(); x2.send(); x3.send();
 }
 
 function footer(){

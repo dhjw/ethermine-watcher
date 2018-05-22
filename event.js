@@ -27,7 +27,7 @@ function afterDOMLoaded(){
 			onRequestsComplete(xs, function(xr, xerr){
 				for(let i=0;i<xs.length;i++) if(xs[i].status!==200){
 					document.getElementById('data_wrap').innerHTML='<div id="error">Error getting data. API seems down.<br>This should be temporary.</div>';
-					if(debug) console.log('api error xs=',xs);
+					console.log('api error xs=',xs);
 					return;
 				}
 				try { var r0=JSON.parse(x0.responseText); } catch(e){}
