@@ -8,7 +8,7 @@ function dataDisplay(r){
 	if(r.currency=='USD') var rd=usdpd; else var rd=BigNumber(usdpd).times(BigNumber(r.currency_rate)).toFixed(2);
 	var eta=getETA(r);
 	r.eta=eta; // so badge doesn't have to recalculate
-	var html='Hashrate: '+hashrate+'<br>Balance: '+unpaid+' / '+minpayout+'<br>ETA: '+eta+'<br><select style="border:0;background:#eee" id="c">';
+	var html='Hashrate: '+hashrate+'<br>Balance: '+unpaid+' / '+minpayout+'<br>ETA: '+eta+'<br><select style="border:0;background:#fff;font-size:16px;" id="c">';
 	for(let i=0;i<r.rates.length;i++) html+='<option value="'+r.rates[i].currency_code+'"'+(r.rates[i].currency_code==r.currency?' selected="selected"':'')+'>'+r.rates[i].currency_code;
 	html+='</select>/day: $'+rd+'<br><a target="_blank" href="https://ethermine.org/miners/'+addr+'">Dashboard</a> | <a target="_blank" href="https://ethermine.org/miners/'+addr+'/payouts">Payouts</a> | <a target="_blank" href="https://ethermine.org/miners/'+addr+'/settings?ip='+r.data.ip+'">Settings</a>';
 	document.getElementById('data_wrap').innerHTML=html;
