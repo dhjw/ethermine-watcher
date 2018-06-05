@@ -54,6 +54,7 @@ function updateData(nocache){
 		for(var a in r1.data) r.data[a]=r1.data[a];
 		r.data.ip=r2.ip;
 		r.rates=[];
+		var done=[];
 		for(let i=0;i<r3.list.resources.length;i++){
 			if(r3.list.resources[i].resource.classname!='Quote') continue;
 			if(!r3.list.resources[i].resource.fields.name) continue;
@@ -63,7 +64,10 @@ function updateData(nocache){
 				r.currency=currency;
 				r.currency_rate=r3.list.resources[i].resource.fields.price;
 			}
-			r.rates.push([cc,r3.list.resources[i].resource.fields.price]);
+			if(done.indexOf(cc)===-1){
+				r.rates.push([cc,r3.list.resources[i].resource.fields.price]);
+				done.push(cc);
+			}
 		}
 		r.rates.push(['USD',1]);
 		r.rates.sort();
