@@ -12,6 +12,6 @@ Watch your Ethermine hashrate, balance, ETA until payout and more.
 - Choose ethermine-watcher folder
 
 ### Donations
-Send to 1207970a46a7a76715cd1bd9926ba358822338ed ([QR code](http://chart.apis.google.com/chart?chs=300x300&cht=qr&choe=ISO-8859-1&chl=1207970a46a7a76715cd1bd9926ba358822338ed))
+Send Ethereum to 1207970a46a7a76715cd1bd9926ba358822338ed ([QR code](http://chart.apis.google.com/chart?chs=300x300&cht=qr&choe=ISO-8859-1&chl=1207970a46a7a76715cd1bd9926ba358822338ed))
 
 Your contributions are very much appreciated!
