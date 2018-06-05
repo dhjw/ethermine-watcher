@@ -9,7 +9,7 @@ function dataDisplay(r){
 	var eta=getETA(r);
 	r.eta=eta; // so badge doesn't have to recalculate
 	var html='Hashrate: '+hashrate+'<br>Balance: '+unpaid+' / '+minpayout+'<br>ETA: '+eta+'<br><select style="border:0;background:#fff;font-size:16px;" id="c">';
-	for(let i=0;i<r.rates.length;i++) html+='<option value="'+r.rates[i].currency_code+'"'+(r.rates[i].currency_code==r.currency?' selected="selected"':'')+'>'+r.rates[i].currency_code;
+	for(let i=0;i<r.rates.length;i++) html+='<option value="'+r.rates[i][0]+'"'+(r.rates[i][0]==r.currency?' selected="selected"':'')+'>'+r.rates[i][0];
 	html+='</select>/day: $'+rd+'<br><a target="_blank" href="https://ethermine.org/miners/'+addr+'">Dashboard</a> | <a target="_blank" href="https://ethermine.org/miners/'+addr+'/payouts">Payouts</a> | <a target="_blank" href="https://ethermine.org/miners/'+addr+'/settings?ip='+r.data.ip+'">Settings</a>';
 	document.getElementById('data_wrap').innerHTML=html;
 	document.getElementById('c').addEventListener('change',()=>{ updateCurrency(); });
@@ -35,7 +35,7 @@ function updateData(nocache){
 	var x0=new XMLHttpRequest(); x0.timeout=15000; x0.open("GET","https://api.ethermine.org/miner/"+addr+"/currentStats",true);
 	var x1=new XMLHttpRequest(); x1.timeout=15000; x1.open("GET","https://api.ethermine.org/miner/"+addr+"/settings",true);
 	var x2=new XMLHttpRequest(); x2.timeout=15000; x2.open("GET","https://ipinfo.io/json",true); // get ip to append to settings url
-	var x3=new XMLHttpRequest(); x3.timeout=15000; x3.open("GET","http://www.mycurrency.net/service/rates",true); // get ip to append to settings url
+	var x3=new XMLHttpRequest(); x3.timeout=15000; x3.open("GET","https://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json",true); // get ip to append to settings url
 	var xs=[x0,x1,x2,x3];
 	onRequestsComplete(xs, function(xr, xerr){
 		for(let i=0;i<xs.length;i++) if(xs[i].status!==200){
@@ -53,8 +53,21 @@ function updateData(nocache){
 		for(var a in r0.data) r.data[a]=r0.data[a];
 		for(var a in r1.data) r.data[a]=r1.data[a];
 		r.data.ip=r2.ip;
-		r.rates=r3;
-		if(currency!='USD'){ for(let i=0;i<r3.length;i++) if(r3[i].currency_code==currency){ r.currency=currency; r.currency_rate=r3[i].rate; break; } } else { r.currency='USD'; }
+		r.rates=[];
+		for(let i=0;i<r3.list.resources.length;i++){
+			if(r3.list.resources[i].resource.classname!='Quote') continue;
+			if(!r3.list.resources[i].resource.fields.name) continue;
+			if(r3.list.resources[i].resource.fields.name.substr(0,4)!='USD/') continue;
+			var cc=r3.list.resources[i].resource.fields.name.substr(4);
+			if(cc==currency){
+				r.currency=currency;
+				r.currency_rate=r3.list.resources[i].resource.fields.price;
+			}
+			r.rates.push([cc,r3.list.resources[i].resource.fields.price]);
+		}
+		r.rates.push(['USD',1]);
+		r.rates.sort();
+		if(!r.currency || currency=='USD') r.currency='USD';
 		if(!r.data.unpaid) r.data.unpaid=0;
 		if(debug) console.log('r=',r);
 		localStorage.setItem('lastupdate',now);
