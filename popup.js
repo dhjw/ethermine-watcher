@@ -24,8 +24,8 @@ function updateData(nocache){
 	// dont spam the api, just load from storage if opened too quickly
 	var lu=localStorage.getItem('lastupdate');
 	if(!lu) lu=0;
-	var now=Date.now()/1000|0;
-	if(now-lu<15 && !nocache){
+	var now=Date.now();
+	if(now-lu<10000 && !nocache){ // less than 15s interval due to retrieval time
 		console.log('loading cached data');
 		dataDisplay(JSON.parse(localStorage.getItem('lastresponse')));
 		return;
