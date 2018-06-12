@@ -81,10 +81,6 @@ function updateData(nocache){
 	x0.send(); x1.send(); x2.send(); x3.send();
 }
 
-function footer(){
-	document.body.innerHTML+='<div id="foot_wrap"></div>';
-}
-
 document.addEventListener('DOMContentLoaded',()=>{
 	chrome.storage.sync.get(['data'],function(obj){
 		if(debug) console.log(obj);
@@ -99,7 +95,6 @@ document.addEventListener('DOMContentLoaded',()=>{
 		if(!error){
 			addr=obj.data.addr;
 			document.body.innerHTML+='<div id="addr_wrap">'+addr.substr(2)+' <a id="rw" href="javascript:;" title="Remove address">x</a></div><div id="data_wrap"></div>';
-			footer();
 			updateData();
 			setInterval(updateData,15000);
 			document.getElementById('rw').addEventListener('click',function(){
@@ -112,14 +107,11 @@ document.addEventListener('DOMContentLoaded',()=>{
 		} else {
 			// address entry page
 			if(debug) console.log('error='+error);
-			if(error!='first'){
-				if(obj.data.addr) localStorage.setItem('addr',obj.data.addr);
-			}
+			if(error!='first') if(obj.data.addr) localStorage.setItem('addr',obj.data.addr);
 			chrome.storage.sync.set({data:{ addr: '' }});
 			if(error=='noaddr') document.body.innerHTML+='<div id="error">Please enter an address.</div>';
 			else if(error=='invalidaddr'){ document.body.innerHTML+='<div id="error">Not a valid address. Please try again.</div>'; localStorage.setItem('addr',''); }
 			document.body.innerHTML+='Enter your miner wallet address below:<br><input id="addr" size="30"> <button id="add">Add</button><br>';
-			footer();
 			document.getElementById('addr').value=localStorage.getItem('addr');
 			if(document.getElementById('addr').value==='') document.getElementById('addr').focus();
 			document.getElementById('addr').addEventListener('blur', addrblur = function(){ localStorage.setItem('addr', document.getElementById('addr').value); });
