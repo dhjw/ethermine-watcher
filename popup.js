@@ -26,7 +26,7 @@ function updateData(nocache){
 	if(!lu) lu=0;
 	var now=Date.now();
 	if(now-lu<10000 && !nocache){ // less than 15s interval due to retrieval time
-		console.log('loading cached data');
+		if(debug) console.log('loading cached data');
 		dataDisplay(JSON.parse(localStorage.getItem('lastresponse')));
 		return;
 	}
@@ -35,7 +35,7 @@ function updateData(nocache){
 	var x0=new XMLHttpRequest(); x0.timeout=15000; x0.open("GET","https://api.ethermine.org/miner/"+addr+"/currentStats",true);
 	var x1=new XMLHttpRequest(); x1.timeout=15000; x1.open("GET","https://api.ethermine.org/miner/"+addr+"/settings",true);
 	var x2=new XMLHttpRequest(); x2.timeout=15000; x2.open("GET","https://ipinfo.io/json",true); // get ip to append to settings url
-	var x3=new XMLHttpRequest(); x3.timeout=15000; x3.open("GET","https://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json",true); // get ip to append to settings url
+	var x3=new XMLHttpRequest(); x3.timeout=15000; x3.open("GET","https://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json",true);
 	var xs=[x0,x1,x2,x3];
 	onRequestsComplete(xs, function(xr, xerr){
 		for(let i=0;i<xs.length;i++) if(xs[i].status!==200){
