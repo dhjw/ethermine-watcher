@@ -2,15 +2,14 @@
 	"name": "Ethermine Watcher",
 	"description": "Watch your Ethermine hashrate, balance, ETA until payout and more.",
 	"manifest_version": 2,
-	"version": "1.0.3",
+	"version": "1.0.5",
 	"icons": {
 		"128": "icon.png"
 	},
 	"permissions": [
 		"storage",
 		"alarms",
-		"notifications",
-		"https://finance.yahoo.com/*"
+		"notifications"
 	],
 	"browser_action": {
 		"default_icon": "icon.png",
