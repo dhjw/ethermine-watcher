@@ -2,7 +2,7 @@
 	"name": "Ethermine Watcher",
 	"description": "Watch your Ethermine hashrate, balance, ETA until payout and more.",
 	"manifest_version": 2,
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"icons": {
 		"128": "icon.png"
 	},

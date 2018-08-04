@@ -4,6 +4,9 @@ function dataDisplay(r){
 	var hashrate=BigNumber(r.data.reportedHashrate).div('1000000').toFixed(1)+' MH/s';
 	var unpaid=BigNumber(r.data.unpaid.toString()).div('1000000000000000000').toFixed(8);
 	var minpayout=BigNumber(r.data.minPayout.toString()).div('1000000000000000000');
+	var coinspd=BigNumber(r.data.coinsPerMin.toString()).times(1440).toFixed(5);
+	var coinspm=BigNumber(r.data.coinsPerMin.toString()).times(1440).times(30).toFixed(5);
+	var coinspy=BigNumber(r.data.coinsPerMin.toString()).times(1440).times(365).toFixed(5);
 	var usdpd=BigNumber(r.data.usdPerMin.toString()).times(1440).toFixed(2);
 	var usdpm=BigNumber(r.data.usdPerMin.toString()).times(1440).times(30).toFixed(2);
 	var usdpy=BigNumber(r.data.usdPerMin.toString()).times(1440).times(365).toFixed(2);
@@ -14,7 +17,8 @@ function dataDisplay(r){
 	// html+='<select style="border:0;background:#fff;font-size:16px;" id="c">';
 	// for(let i=0;i<r.rates.length;i++) html+='<option value="'+r.rates[i][0]+'"'+(r.rates[i][0]==r.currency?' selected="selected"':'')+'>'+r.rates[i][0];
 	// html+='</select>/day: $'+rd+'<br>';
-	html+='USD/d/m/y: $'+usdpd+' / $'+usdpm+' / $'+usdpy+'<br>';
+	html+='<table><tr><th></th><th>Day</th><th>Month</th><th>Year</th></tr><tr><td>ETH</td><td>'+coinspd+'</td><td>'+coinspm+'</td><td>'+coinspy+'</td></tr><tr><td>USD</td><td>'+usdpd+'</td><td>'+usdpm+'</td><td>'+usdpy+'</td></tr></table>';
+	// html+='USD/d/m/y: $'+usdpd+' / $'+usdpm+' / $'+usdpy+'<br>';
 	html+='<a target="_blank" href="https://ethermine.org/miners/'+addr+'">Dashboard</a> | <a target="_blank" href="https://ethermine.org/miners/'+addr+'/payouts">Payouts</a> | <a target="_blank" href="https://ethermine.org/miners/'+addr+'/settings?ip='+r.data.ip+'">Settings</a>';
 	document.getElementById('data_wrap').innerHTML=html;
 	// document.getElementById('c').addEventListener('change',()=>{ updateCurrency(); });
