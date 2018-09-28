@@ -32,7 +32,7 @@ function updateBadge(r){
 	if(debug) console.log('updating badge to '+unpaid);
 	chrome.browserAction.setTitle({ title:'Hashrate: '+hashrate+'\nBalance: '+unpaid+' / '+minpayout+'\nETA: '+getETA(r) });
 	chrome.browserAction.setBadgeBackgroundColor({color:'#222'});
-	if(unpaid.substr(0,6)==0) unpaid='0'; else unpaid=unpaid.replace(/^0+/,'').substr(0,5);
+	if(unpaid.substr(0,6)==0) unpaid='0'; else unpaid=unpaid.replace(/^0+/,'').substr(0,navigator.platform.indexOf('Linux')!=-1?5:4);
 	chrome.browserAction.setBadgeText({text:unpaid});
 }
 
