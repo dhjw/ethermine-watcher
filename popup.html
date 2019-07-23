@@ -1,5 +1,6 @@
 <html>
 <head>
+<meta charset="UTF-8">
 <title>Ethermine Watcher</title>
 <style type="text/css">
 	body {
@@ -10,12 +11,33 @@
 		min-width:380px;
 	}
 	a, a:visited { color:blue; text-decoration:none }
-	a#rw, a#rw:visited { color:red }
+	a#rw, a#rw:visited { color:red; }
+	a#rw:hover {
+		color:white;
+	    background-color:red;
+	}
 	h2 { margin:0; }
-	#addr_wrap { margin-bottom:0.25em; }
-	table { border-collapse:collapse; margin:0.25em auto 0.25em auto; }
+	#addr_wrap,#mid_wrap { margin-bottom:5px; }
+	table { border-collapse:collapse; margin:0 auto 8px auto; }
 	th,td { font-weight:normal; font-size:16px; padding:4px; border:1px solid #222; }
 	th { font-size:15px; }
+	.lt24h {
+		cursor:help;
+	    color:#fff;
+	    background-color:#888;
+	    width:13px;
+	    height:13px;
+	    display:inline-block;
+	    border-radius:100%;
+	    font-size:11px;
+	    font-family:times;
+	    text-align:center;
+	    text-decoration:none;
+	    -webkit-box-shadow: inset -1px -1px 1px 0px rgba(0,0,0,0.25);
+	    -moz-box-shadow: inset -1px -1px 1px 0px rgba(0,0,0,0.25);
+	    box-shadow: inset -1px -1px 1px 0px rgba(0,0,0,0.25);
+	    margin-left:5px;
+	}
 </style>
 <script src="bignumber.min.js"></script>
 <script src="global.js"></script>

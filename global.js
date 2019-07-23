@@ -30,20 +30,31 @@ function updateBadge(r){
 	var unpaid=BigNumber(r.data.unpaid.toString()).div('1000000000000000000').toFixed(8);
 	var minpayout=BigNumber(r.data.minPayout.toString()).div('1000000000000000000');
 	if(debug) console.log('updating badge to '+unpaid);
-	chrome.browserAction.setTitle({ title:'Hashrate: '+hashrate+'\nBalance: '+unpaid+' / '+minpayout+'\nETA: '+getETA(r) });
+	r=getETA(r);
+	chrome.browserAction.setTitle({ title:'Hashrate: '+hashrate+'\nBalance: '+unpaid+' / '+minpayout+'\nETA: '+r.eta });
 	chrome.browserAction.setBadgeBackgroundColor({color:'#222'});
 	if(unpaid.substr(0,5)==0) unpaid='0'; else unpaid=unpaid.replace(/^0+/,'').substr(0,4);
 	chrome.browserAction.setBadgeText({text:unpaid});
 }
 
 function getETA(r){
-	if(r.eta) return r.eta; // so popup doesn't have to recaculate for badge
-	var togo=BigNumber(r.data.minPayout.toString()).minus(BigNumber(r.data.unpaid.toString())).div('1000000000000000000');
+	if(r.eta) return r; // so popup doesn't have to recalculate for badge
 	var cpm=BigNumber(r.data.coinsPerMin.toString());
+	// if estimate less than 24h, show a note and adjust ETA to 24 hour+1m from last payment
+	var togo=BigNumber(r.data.minPayout.toString()).div('1000000000000000000');
 	var stogo=BigNumber(togo).div(BigNumber(cpm)).times('60').toFixed(0);
-	var eta=togoString(stogo);
-	if(debug) console.log('getETA() togo='+togo+' cpm='+cpm+' stogo='+stogo+' eta='+eta);
-	return eta;
+	if(stogo<86400){
+		r.lt24h=true;
+		stogo=BigNumber(86460)-((Math.floor(Date.now()/1000))-r.lastPayout.paidOn);
+		r.eta=togoString(stogo);
+	} else {
+		r.lt24h=false;
+		var togo=BigNumber(r.data.minPayout.toString()).minus(BigNumber(r.data.unpaid.toString())).div('1000000000000000000');
+		var stogo=BigNumber(togo).div(BigNumber(cpm)).times('60').toFixed(0);
+		r.eta=togoString(stogo);
+	}
+	if(debug) console.log('getETA() togo='+togo+' cpm='+cpm+' stogo='+stogo+' eta='+r.eta);
+	return r;
 }
 
 function togoString(x){
