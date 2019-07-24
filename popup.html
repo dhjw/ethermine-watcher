@@ -38,7 +38,33 @@
 	    box-shadow: inset -1px -1px 1px 0px rgba(0,0,0,0.25);
 	    margin-left:5px;
 	}
-	#c { border:0;background:#fff;font-size:16px;padding:3px 0 4px 0; }
+	td.sel { padding:0; }
+	#coin, #cur {
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+    	border:0;
+		background:#fff;
+		font-size:16px;
+		padding:4px 10px 4px 4px;
+		width:100%;
+	}
+	#nodata_coin { display:inline-block; border:1px solid black; width:53px; }
+	
+	.sel-cont {position:relative; display: inline;}
+	.sel-cont:after {content:""; width:0; height:0; position:absolute; pointer-events: none;}
+	.sel-cont:after {
+	    border-left: 3px solid transparent;
+	    border-right: 3px solid transparent;
+	    top: 7px;
+	    right: 4px;
+	    border-top: 4px solid black;
+	    opacity: 0.8;
+	}
+	select::-ms-expand {
+	    display: none;
+	}
+
 </style>
 <script src="bignumber.min.js"></script>
 <script src="global.js"></script>
