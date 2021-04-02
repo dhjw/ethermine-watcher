@@ -48,7 +48,7 @@ function loadData(opts,cb){
 		xs.push(x2);
 	}
 	if(!skipRates){
-		var x3=new XMLHttpRequest(); x3.timeout=15000; x3.open('GET','https://api'+etc+'.exchangeratesapi.io/latest',true);
+		var x3=new XMLHttpRequest(); x3.timeout=15000; x3.open('GET','https://cdn.dw1.xyz/ethermine-watcher/rates',true);
 		xs.push(x3);
 	}
 	onRequestsComplete(xs, function(xr, xerr){
@@ -78,18 +78,8 @@ function loadData(opts,cb){
 			if(r2.data[0]) r.lastPayout=r2.data[0]; else r.lastPayout=false;
 		} else r.lastPayout=lr.lastPayout;
 		if(!skipRates){
-			var tmp=[];
-			// convert EUR rates to USD rates
-			r3.rates.EUR=1;
-			for(var c in r3.rates){
-				var inusd=new BigNumber(r3.rates[c]).div(r3.rates.USD);
-				tmp.push([c,inusd]);
-				if(lr && c==lr.currency) r.currency=c;
-			}
-			tmp.sort();
-			r.rates={};
-			for(let i=0;i<tmp.length;i++) r.rates[tmp[i][0]]=tmp[i][1];
 			r.ratesTime=nows;
+			r.rates=r3.rates;
 		} else {
 			r.currency=lr.currency;
 			r.ratesTime=lr.ratesTime;
