@@ -29,7 +29,7 @@ function loadData(opts,cb){
 	// dont spam the api, just load from storage if opened too quickly
 	var now=Date.now(), nows=Math.floor(now/1000);
 	var lr=JSON.parse(localStorage.getItem('lastresponse'));
-	if(!lr) lr={coin:'eth'};
+	if(!lr) lr={coin:'eth',currency:'USD'};
 	if(debug) console.log('lr=',lr);
 	if(lr.addr==opts.addr && now-lr.updateTime<29500 && !opts.nocache){
 		if(debug) console.log('loading cached data');
@@ -81,12 +81,11 @@ function loadData(opts,cb){
 			r.ratesTime=nows;
 			r.rates=r3.rates;
 		} else {
-			r.currency=lr.currency;
 			r.ratesTime=lr.ratesTime;
 			r.rates=lr.rates;
 		}
 		if(lr.coin) r.coin=lr.coin; else r.coin='eth';
-		if(!r.currency) r.currency='USD';
+		if(lr.currency) r.currency=lr.currency; else lr.currency='USD';
 		if(!r.data.unpaid) r.data.unpaid=0;
 		r.updateTime=now;
 		if(debug) console.log('r=',r);
